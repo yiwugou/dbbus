@@ -1,0 +1,4 @@
+rootProject.name = 'dbbus'
+
+include 'dbbus-core'
+include 'dbbus-example'

@@ -1,0 +1,25 @@
+ext.externalDependency = [
+    'druid': 'com.alibaba:druid:1.1.3',
+    'junit': 'junit:junit:4.12',
+    'ojdbc': 'com.oracle:ojdbc6:11.2.0.4',
+    'lombok':'org.projectlombok:lombok:1.16.18',
+    'curator': 'org.apache.curator:curator-recipes:2.12.0',
+    'jedis': 'redis.clients:jedis:2.9.0',
+    'slf4j': 'org.slf4j:slf4j-log4j12:1.7.25'
+];
+
+
+subprojects {
+    repositories {
+        mavenLocal();
+        mavenCentral();
+    }
+    tasks.withType(JavaCompile) {
+        options.encoding ="UTF-8";
+    }
+    plugins.withType(JavaPlugin) {
+        sourceCompatibility = JavaVersion.VERSION_1_8;
+        targetCompatibility = JavaVersion.VERSION_1_8;
+    }
+
+}

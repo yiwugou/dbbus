@@ -1,0 +1,13 @@
+apply plugin: 'java'
+
+dependencies {
+    compile externalDependency.druid;
+    compile externalDependency.lombok;
+    compile externalDependency.slf4j;
+    compile externalDependency.ojdbc;
+    compile externalDependency.curator;
+    compile externalDependency.jedis;
+
+
+    testCompile externalDependency.junit
+}

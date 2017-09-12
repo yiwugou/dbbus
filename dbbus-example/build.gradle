@@ -1,0 +1,28 @@
+apply plugin: 'java'
+
+dependencies {
+    compile project(':dbbus-core')
+}
+
+task myTar(type: Tar, dependsOn:assemble) {
+    extension = 'tar.gz'
+    baseName = project.name
+    compression = Compression.GZIP
+
+    into("${project.name}/conf") {
+        from "conf/"
+    }
+
+    from("script") {
+        into ("${project.name}/bin")
+        fileMode = 0755
+    }
+
+    into("${project.name}/lib") {
+        from configurations.runtime
+        from("${buildDir}/libs")
+    }
+
+}
+
+
