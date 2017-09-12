@@ -20,7 +20,7 @@ import com.yiwugou.dbbus.core.enums.Status;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 import com.yiwugou.dbbus.core.jdbc.RowMapper;
 
-public class EventPullerTask implements Runnable {
+public class EventPullerTask implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventPullerTask.class);
 
     private EventConsumer eventConsumer;
@@ -38,15 +38,20 @@ public class EventPullerTask implements Runnable {
     }
 
     private void initData() {
-        this.jdbcTemplate = new JdbcTemplate(beanCreater.getDataSourceCreater().create(config.getJdbcConfig()));
-        this.executor = Executors.newScheduledThreadPool(config.getEventConfig().getPullerPoolSize());
+        this.jdbcTemplate = new JdbcTemplate(
+                this.beanCreater.getDataSourceCreater().create(this.config.getJdbcConfig()));
+        this.executor = Executors.newScheduledThreadPool(this.config.getEventConfig().getPullerPoolSize());
         try {
-            this.eventConsumer = (EventConsumer) Class.forName(config.getEventConfig().getConsumerClass())
+            this.eventConsumer = (EventConsumer) Class.forName(this.config.getEventConfig().getConsumerClass())
                     .newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         this.clusterLock = ClusterLockCreater.create(this.config.getClusterConfig());
+        Long clearDelay = this.config.getEventConfig().getClearDelay();
+        if (clearDelay != null && clearDelay > 0) {
+            new EventClearTask(this.jdbcTemplate, clearDelay).execute();
+        }
     }
 
     private JdbcTemplate jdbcTemplate;
@@ -54,11 +59,11 @@ public class EventPullerTask implements Runnable {
 
     @Override
     public void run() {
-        if (clusterLock.tryLock()) {
+        if (this.clusterLock.tryLock()) {
             try {
-                accessDb();
+                this.accessDb();
             } finally {
-                clusterLock.unLock();
+                this.clusterLock.unLock();
             }
         }
     }
@@ -75,7 +80,7 @@ public class EventPullerTask implements Runnable {
                     de.setStatus(Status.parse(rs.getInt("status")));
                     de.setTs(rs.getLong("ts"));
                     return de;
-                }, Status.UNREAD.ordinal(), config.getEventConfig().getMaxRowNum());
+                }, Status.UNREAD.ordinal(), this.config.getEventConfig().getMaxRowNum());
         if (events != null && !events.isEmpty()) {
             logger.info("dbbus event size=" + events.size() + ", events=" + events);
             Long minTxn = events.get(0).getTxn();
@@ -85,14 +90,16 @@ public class EventPullerTask implements Runnable {
                     Status.READED.ordinal(), minTxn, maxTxn);
             logger.info("update result=" + result);
             DataContainer.eventBeforeMergeQueue().addAll(events);
-            new EventMergeRunnable(jdbcTemplate, eventConsumer).execute();
+            new EventMergeRunnable(this.jdbcTemplate, this.eventConsumer).execute();
         } else {
             logger.debug("event is empty");
         }
     }
 
+    @Override
     public void execute() {
-        executor.scheduleWithFixedDelay(this, 0, config.getEventConfig().getPullerDelay(), TimeUnit.MILLISECONDS);
+        this.executor.scheduleWithFixedDelay(this, 0, this.config.getEventConfig().getPullerDelay(),
+                TimeUnit.MILLISECONDS);
     }
 
 }

@@ -15,6 +15,7 @@ public class Constants {
     public static final String EVENT_QUEUE_CAPACITY = "event.queueCapacity";
     public static final String EVENT_PULLER_POOL_SIZE = "event.pullerPoolSize";
     public static final String EVENT_PULLER_DELAY = "event.pullerDelay";
+    public static final String EVENT_CLEAR_DELAY = "event.clearDelay";
     public static final String EVENT_CONSUMER_CLASS = "event.consumerClass";
 
     public static final String CLUSTER_TYPE = "cluster.type";

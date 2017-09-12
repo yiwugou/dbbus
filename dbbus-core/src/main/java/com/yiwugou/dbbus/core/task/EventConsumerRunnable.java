@@ -15,7 +15,7 @@ import com.yiwugou.dbbus.core.EventConsumer;
 import com.yiwugou.dbbus.core.enums.Action;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 
-public class EventConsumerRunnable implements Runnable {
+public class EventConsumerRunnable implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumerRunnable.class);
 
     private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
@@ -35,16 +35,16 @@ public class EventConsumerRunnable implements Runnable {
         DataContainer.eventAfterMergeQueue().drainTo(events);
         for (DbbusEvent event : events) {
             if (Action.DELETE == event.getAction()) {
-                eventConsumer.onDelete(event);
+                this.eventConsumer.onDelete(event);
             } else {
                 String table = event.getTableName();
                 String id = event.getId();
                 String sql = "select * from " + table + " where id=?";
                 Map<String, Object> data = this.jdbcTemplate.queryForMap(sql, id);
                 if (Action.INSERT == event.getAction()) {
-                    eventConsumer.onInsert(event, data);
+                    this.eventConsumer.onInsert(event, data);
                 } else if (Action.UPDATE == event.getAction()) {
-                    eventConsumer.onUpdate(event, data);
+                    this.eventConsumer.onUpdate(event, data);
                 } else {
                     logger.error("not support event action=" + event.getAction());
                 }
@@ -52,6 +52,7 @@ public class EventConsumerRunnable implements Runnable {
         }
     }
 
+    @Override
     public void execute() {
         EXECUTOR.execute(this);
     }

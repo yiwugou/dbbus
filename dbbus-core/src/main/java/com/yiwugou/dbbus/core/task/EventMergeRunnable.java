@@ -19,7 +19,7 @@ import com.yiwugou.dbbus.core.TableId;
 import com.yiwugou.dbbus.core.enums.Action;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 
-public class EventMergeRunnable implements Runnable {
+public class EventMergeRunnable implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventMergeRunnable.class);
 
     private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
@@ -39,7 +39,7 @@ public class EventMergeRunnable implements Runnable {
         if (events != null && !events.isEmpty()) {
             List<DbbusEvent> afterMerge = this.mergeEvent(events);
             DataContainer.eventAfterMergeQueue().addAll(afterMerge);
-            new EventConsumerRunnable(jdbcTemplate, eventConsumer).execute();
+            new EventConsumerRunnable(this.jdbcTemplate, this.eventConsumer).execute();
         }
     }
 
@@ -54,7 +54,7 @@ public class EventMergeRunnable implements Runnable {
                     Iterator<DbbusEvent> iterator = afterMerge.iterator();
                     while (iterator.hasNext()) {
                         DbbusEvent i = iterator.next();
-                        if (isEquals(exist, i)) {
+                        if (this.isEquals(exist, i)) {
                             iterator.remove();
                         }
                     }
@@ -72,6 +72,7 @@ public class EventMergeRunnable implements Runnable {
                 && src.getAction() == desc.getAction();
     }
 
+    @Override
     public void execute() {
         EXECUTOR.execute(this);
     }

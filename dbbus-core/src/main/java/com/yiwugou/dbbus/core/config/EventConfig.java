@@ -30,6 +30,9 @@ public class EventConfig {
     private Long pullerDelay = 1000L;
     @Getter
     @Setter(AccessLevel.PRIVATE)
+    private Long clearDelay = -1L;
+    @Getter
+    @Setter(AccessLevel.PRIVATE)
     private String consumerClass;
 
     public static EventConfig init(Properties properties) {
@@ -54,9 +57,14 @@ public class EventConfig {
             config.setPullerPoolSize(Integer.valueOf(puulerPoolSize));
         }
 
-        String puulerDelay = properties.getProperty(Constants.EVENT_PULLER_DELAY);
-        if (CommonUtils.isNotBlank(puulerDelay)) {
-            config.setPullerDelay(Long.valueOf(puulerDelay));
+        String pullerDelay = properties.getProperty(Constants.EVENT_PULLER_DELAY);
+        if (CommonUtils.isNotBlank(pullerDelay)) {
+            config.setPullerDelay(Long.valueOf(pullerDelay));
+        }
+
+        String clearDelay = properties.getProperty(Constants.EVENT_CLEAR_DELAY);
+        if (CommonUtils.isNotBlank(clearDelay)) {
+            config.setClearDelay(Long.valueOf(clearDelay));
         }
 
         String consumerClass = properties.getProperty(Constants.EVENT_CONSUMER_CLASS);
