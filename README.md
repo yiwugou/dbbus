@@ -1,13 +1,13 @@
 
-# a oracle data change listener. like [linkin-databus](https://github.com/linkedin/databus/)
+# An oracle data change listener. like [linkin-databus](https://github.com/linkedin/databus/)
 
-#Build System
+# Build System
 ```
 cd dbbus
 gradle myTar
 ```
 
-#Add Triggers Sequence Event-Table in oracle
+# Add Triggers Sequence Event-Table in oracle
 
 ```
 -- Create table
@@ -51,15 +51,15 @@ begin
 end;
 ```
 
-#cluster
-###zookeeper
+# cluster
+### zookeeper
 dbbus.properties
 ```
 cluster.type=zookeeper
 cluster.hostPort=127.0.0.1:2181
 ```
 
-###redis
+### redis
 dbbus.properties
 ```
 cluster.type=redis
