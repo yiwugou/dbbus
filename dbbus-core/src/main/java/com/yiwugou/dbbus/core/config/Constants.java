@@ -16,9 +16,12 @@ public class Constants {
     public static final String EVENT_PULLER_POOL_SIZE = "event.pullerPoolSize";
     public static final String EVENT_PULLER_DELAY = "event.pullerDelay";
     public static final String EVENT_CLEAR_DELAY = "event.clearDelay";
-    public static final String EVENT_CONSUMER_CLASS = "event.consumerClass";
+    // public static final String EVENT_CONSUMER_CLASS = "event.consumerClass";
 
     public static final String CLUSTER_TYPE = "cluster.type";
     public static final String CLUSTER_HOST_PORT = "cluster.hostPort";
+
+    public static final String TABLE_ID = "^table\\.(.+)\\.id$";
+    public static final String TABLE_COLUMNS = "^table\\.(.+)\\.columns$";
 
 }

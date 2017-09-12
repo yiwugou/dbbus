@@ -9,9 +9,12 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.yiwugou.dbbus.core.BeanCreater;
 import com.yiwugou.dbbus.core.DataContainer;
 import com.yiwugou.dbbus.core.DbbusEvent;
 import com.yiwugou.dbbus.core.EventConsumer;
+import com.yiwugou.dbbus.core.config.Config;
+import com.yiwugou.dbbus.core.config.IdColumns;
 import com.yiwugou.dbbus.core.enums.Action;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 
@@ -24,9 +27,15 @@ public class EventConsumerRunnable implements Runnable, Executeable {
 
     private EventConsumer eventConsumer;
 
-    public EventConsumerRunnable(JdbcTemplate jdbcTemplate, EventConsumer eventConsumer) {
+    private Config config;
+
+    public EventConsumerRunnable(JdbcTemplate jdbcTemplate, BeanCreater beanCreater, Config config) {
         this.jdbcTemplate = jdbcTemplate;
-        this.eventConsumer = eventConsumer;
+        this.eventConsumer = beanCreater.getEventConsumer();
+        if (this.eventConsumer == null) {
+            throw new RuntimeException("eventConsumer must not be null");
+        }
+        this.config = config;
     }
 
     @Override
@@ -37,9 +46,14 @@ public class EventConsumerRunnable implements Runnable, Executeable {
             if (Action.DELETE == event.getAction()) {
                 this.eventConsumer.onDelete(event);
             } else {
-                String table = event.getTableName();
+                String tableName = event.getTableName();
                 String id = event.getId();
-                String sql = "select * from " + table + " where id=?";
+                IdColumns idColumns = this.config.getTableConfig().getIdColumns(tableName);
+                if (idColumns == null) {
+                    idColumns = new IdColumns();
+                }
+                String sql = "select " + idColumns.getColumns() + " from " + tableName + " where " + idColumns.getId()
+                        + "=?";
                 Map<String, Object> data = this.jdbcTemplate.queryForMap(sql, id);
                 if (Action.INSERT == event.getAction()) {
                     this.eventConsumer.onInsert(event, data);

@@ -15,7 +15,6 @@ import com.yiwugou.dbbus.core.config.Constants;
 import com.yiwugou.dbbus.core.task.EventPullerTask;
 import com.yiwugou.dbbus.core.util.CommonUtils;
 
-import lombok.Setter;
 import lombok.ToString;
 
 @ToString
@@ -26,7 +25,6 @@ public class DbbusStart {
 
     private Config config;
 
-    @Setter
     private BeanCreater beanCreater;
 
     public DbbusStart(String[] args, BeanCreater beanCreater) {
@@ -35,10 +33,6 @@ public class DbbusStart {
         this.initEventQueue();
         this.initPullerTask();
         logger.info(this.toString());
-    }
-
-    public DbbusStart(String[] args) {
-        this(args, BeanCreater.builder().build());
     }
 
     private void initConfig(String[] args) {
@@ -54,26 +48,23 @@ public class DbbusStart {
                     p1 = CommonUtils.mergeProperties(p1, p2);
                 }
             }
-            config = Config.initConfig(p1);
+            DataContainer.initProperties(p1);
+            this.config = Config.initConfig(DataContainer.properties());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private void initEventQueue() {
-        DataContainer.initEventQueue(config.getEventConfig().getQueueCapacity());
+        DataContainer.initEventQueue(this.config.getEventConfig().getQueueCapacity());
     }
 
     private void initPullerTask() {
-        this.eventPullerTask = new EventPullerTask(config, beanCreater);
+        this.eventPullerTask = new EventPullerTask(this.config, this.beanCreater);
     }
 
     public void start() {
-        eventPullerTask.execute();
-    }
-
-    public static void main(String[] args) throws Exception {
-        new DbbusStart(args).start();
+        this.eventPullerTask.execute();
     }
 
 }

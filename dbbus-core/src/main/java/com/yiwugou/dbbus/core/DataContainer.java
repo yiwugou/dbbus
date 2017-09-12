@@ -1,5 +1,6 @@
 package com.yiwugou.dbbus.core;
 
+import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -7,6 +8,18 @@ public class DataContainer {
 
     private static BlockingQueue<DbbusEvent> EVENT_BEFORE_MERGE_QUEUE = null;
     private static BlockingQueue<DbbusEvent> EVENT_AFTER_MERGE_QUEUE = null;
+
+    private static Properties PROPERTIES = null;
+
+    public static void initProperties(Properties properties) {
+        if (PROPERTIES == null) {
+            PROPERTIES = properties;
+        }
+    }
+
+    public static Properties properties() {
+        return PROPERTIES;
+    }
 
     public static void initEventQueue(Integer capacity) {
         if (EVENT_BEFORE_MERGE_QUEUE == null) {

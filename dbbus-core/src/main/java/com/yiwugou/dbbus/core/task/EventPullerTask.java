@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.yiwugou.dbbus.core.BeanCreater;
 import com.yiwugou.dbbus.core.DataContainer;
 import com.yiwugou.dbbus.core.DbbusEvent;
-import com.yiwugou.dbbus.core.EventConsumer;
 import com.yiwugou.dbbus.core.cluster.ClusterLock;
 import com.yiwugou.dbbus.core.cluster.ClusterLockCreater;
 import com.yiwugou.dbbus.core.config.Config;
@@ -22,8 +21,6 @@ import com.yiwugou.dbbus.core.jdbc.RowMapper;
 
 public class EventPullerTask implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventPullerTask.class);
-
-    private EventConsumer eventConsumer;
 
     private BeanCreater beanCreater;
 
@@ -41,13 +38,8 @@ public class EventPullerTask implements Runnable, Executeable {
         this.jdbcTemplate = new JdbcTemplate(
                 this.beanCreater.getDataSourceCreater().create(this.config.getJdbcConfig()));
         this.executor = Executors.newScheduledThreadPool(this.config.getEventConfig().getPullerPoolSize());
-        try {
-            this.eventConsumer = (EventConsumer) Class.forName(this.config.getEventConfig().getConsumerClass())
-                    .newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         this.clusterLock = ClusterLockCreater.create(this.config.getClusterConfig());
+
         Long clearDelay = this.config.getEventConfig().getClearDelay();
         if (clearDelay != null && clearDelay > 0) {
             new EventClearTask(this.jdbcTemplate, clearDelay).execute();
@@ -90,7 +82,7 @@ public class EventPullerTask implements Runnable, Executeable {
                     Status.READED.ordinal(), minTxn, maxTxn);
             logger.info("update result=" + result);
             DataContainer.eventBeforeMergeQueue().addAll(events);
-            new EventMergeRunnable(this.jdbcTemplate, this.eventConsumer).execute();
+            new EventMergeRunnable(this.jdbcTemplate, this.beanCreater, this.config).execute();
         } else {
             logger.debug("event is empty");
         }

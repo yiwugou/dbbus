@@ -28,12 +28,17 @@ public class Config {
     @Setter(AccessLevel.PRIVATE)
     private ClusterConfig clusterConfig;
 
+    @Getter
+    @Setter(AccessLevel.PRIVATE)
+    private TableConfig tableConfig;
+
     public static Config initConfig(Properties properties) {
         Config config = new Config();
         config = new Config();
         config.setEventConfig(EventConfig.init(properties));
         config.setJdbcConfig(JdbcConfig.init(properties));
         config.setClusterConfig(ClusterConfig.init(properties));
+        config.setTableConfig(TableConfig.init(properties));
         logger.info("config init " + config);
         return config;
     }

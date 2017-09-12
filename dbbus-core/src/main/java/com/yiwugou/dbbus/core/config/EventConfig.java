@@ -31,9 +31,6 @@ public class EventConfig {
     @Getter
     @Setter(AccessLevel.PRIVATE)
     private Long clearDelay = -1L;
-    @Getter
-    @Setter(AccessLevel.PRIVATE)
-    private String consumerClass;
 
     public static EventConfig init(Properties properties) {
         EventConfig config = new EventConfig();
@@ -67,12 +64,13 @@ public class EventConfig {
             config.setClearDelay(Long.valueOf(clearDelay));
         }
 
-        String consumerClass = properties.getProperty(Constants.EVENT_CONSUMER_CLASS);
-        if (CommonUtils.isNotBlank(consumerClass)) {
-            config.setConsumerClass(consumerClass);
-        } else {
-            throw new RuntimeException("event consumer class must not be null");
-        }
+        // String consumerClass =
+        // properties.getProperty(Constants.EVENT_CONSUMER_CLASS);
+        // if (CommonUtils.isNotBlank(consumerClass)) {
+        // config.setConsumerClass(consumerClass);
+        // } else {
+        // throw new RuntimeException("event consumer class must not be null");
+        // }
         return config;
     }
 }

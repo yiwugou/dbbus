@@ -42,7 +42,7 @@ jvm_arg_line="-d64 ${jvm_direct_memory} ${jvm_min_heap} ${jvm_max_heap} ${jvm_gc
 config_file_option="-config dbbus.properties"
 
 
-main_class=com.yiwugou.dbbus.core.start.DbbusStart
+main_class=com.yiwugou.dbbus.example.DbbusMain
 
 cmdline="java -cp ${cp} ${jvm_arg_line} ${main_class} ${config_file_option} $*"
 echo $cmdline
