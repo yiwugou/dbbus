@@ -7,6 +7,12 @@ cd dbbus
 gradle myTar
 ```
 
+# Install Maven
+```
+cd dbbus
+gradle uploadArchives
+```
+
 # Add Triggers Sequence Event-Table in oracle
 
 ```
@@ -42,11 +48,11 @@ CREATE OR REPLACE TRIGGER TRG_T_PERSON
   for each row
 begin
   if (inserting) then
-    INSERT INTO DBBUS_EVENT(txn, table_name, id, action ,status) VALUES(seq_dbbus_txn.nextval,'t_person',:new.id,0,0);
+    INSERT INTO DBBUS_EVENT(txn, table_name, id, action, status) VALUES(seq_dbbus_txn.nextval, 't_person', :new.id, 0, 0);
   elsif(updating) then
-    INSERT INTO DBBUS_EVENT(txn, table_name, id, action ,status) VALUES(seq_dbbus_txn.nextval,'t_person',:old.id,1,0);
+    INSERT INTO DBBUS_EVENT(txn, table_name, id, action, status) VALUES(seq_dbbus_txn.nextval, 't_person', :old.id, 1, 0);
   else
-    INSERT INTO DBBUS_EVENT(txn, table_name, id, action ,status) VALUES(seq_dbbus_txn.nextval,'t_person',:old.id,2,0);
+    INSERT INTO DBBUS_EVENT(txn, table_name, id, action, status) VALUES(seq_dbbus_txn.nextval, 't_person', :old.id, 2, 0);
   end if;
 end;
 ```
