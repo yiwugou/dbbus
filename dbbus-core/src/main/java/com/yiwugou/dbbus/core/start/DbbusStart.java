@@ -15,6 +15,7 @@ import com.yiwugou.dbbus.core.config.Constants;
 import com.yiwugou.dbbus.core.task.EventPullerTask;
 import com.yiwugou.dbbus.core.util.CommonUtils;
 
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString
@@ -25,14 +26,17 @@ public class DbbusStart {
 
     private Config config;
 
+    @Setter
     private BeanCreater beanCreater;
 
     public DbbusStart(String[] args, BeanCreater beanCreater) {
-        this.beanCreater = beanCreater;
         this.initConfig(args);
         this.initEventQueue();
-        this.initPullerTask();
-        logger.info(this.toString());
+        this.beanCreater = beanCreater;
+    }
+
+    public DbbusStart(String[] args) {
+        this(args, null);
     }
 
     private void initConfig(String[] args) {
@@ -64,7 +68,9 @@ public class DbbusStart {
     }
 
     public void start() {
+        this.initPullerTask();
         this.eventPullerTask.execute();
+        logger.info("started---" + this.toString());
     }
 
 }

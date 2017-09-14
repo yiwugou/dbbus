@@ -47,14 +47,11 @@ public class EventConsumerRunnable implements Runnable, Executeable {
                 this.eventConsumer.onDelete(event);
             } else {
                 String tableName = event.getTableName();
-                String id = event.getId();
                 IdColumns idColumns = this.config.getTableConfig().getIdColumns(tableName);
                 if (idColumns == null) {
                     idColumns = new IdColumns();
                 }
-                String sql = "select " + idColumns.getColumns() + " from " + tableName + " where " + idColumns.getId()
-                        + "=?";
-                Map<String, Object> data = this.jdbcTemplate.queryForMap(sql, id);
+                Map<String, Object> data = this.processDataMap(idColumns, event);
                 if (Action.INSERT == event.getAction()) {
                     this.eventConsumer.onInsert(event, data);
                 } else if (Action.UPDATE == event.getAction()) {
@@ -64,6 +61,18 @@ public class EventConsumerRunnable implements Runnable, Executeable {
                 }
             }
         }
+    }
+
+    private Map<String, Object> processDataMap(IdColumns idColumns, DbbusEvent event) {
+        Map<String, Object> data = null;
+        String tableName = event.getTableName();
+        String id = event.getId();
+        if (!idColumns.getColumns().equals("null")) {
+            String sql = "select " + idColumns.getColumns() + " from " + tableName + " where " + idColumns.getId()
+                    + "=?";
+            data = this.jdbcTemplate.queryForMap(sql, id);
+        }
+        return data;
     }
 
     @Override
