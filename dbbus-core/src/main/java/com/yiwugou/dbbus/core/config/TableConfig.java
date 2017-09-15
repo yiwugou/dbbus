@@ -49,6 +49,16 @@ public class TableConfig {
                 idColumns.setColumns(properties.getProperty(key));
                 tableMap.put(tableName, idColumns);
             }
+            tableName = IdColumns.findTableByEnable(key);
+            if (tableName != null) {
+                IdColumns idColumns = tableMap.get(tableName);
+                if (idColumns == null) {
+                    idColumns = new IdColumns();
+                    idColumns.setTableName(tableName);
+                }
+                idColumns.setEnable(Boolean.valueOf(properties.getProperty(key)));
+                tableMap.put(tableName, idColumns);
+            }
         }
 
         TableConfig config = new TableConfig();
