@@ -8,10 +8,10 @@ logs_dir="${root_dir}/logs"
 conf_dir="${root_dir}/conf"
 var_dir="${root_dir}/var"
 
-pid_file=${logs_dir}/relay.pid
-out_file=${logs_dir}/relay.out
+pid_file=${logs_dir}/dbbus.pid
+out_file=${logs_dir}/dbbus.out
 
-cp="."
+cp=".:${conf_dir}"
 for f in ${lib_dir}/*.jar ; do
   cp="${cp}:${f}"
 done
