@@ -19,8 +19,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
-public class DbbusStart {
-    private static final Logger logger = LoggerFactory.getLogger(DbbusStart.class);
+public class Application {
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     private EventPullerTask eventPullerTask;
 
@@ -29,13 +29,13 @@ public class DbbusStart {
     @Setter
     private BeanCreater beanCreater;
 
-    public DbbusStart(String[] args, BeanCreater beanCreater) {
+    public Application(String[] args, BeanCreater beanCreater) {
         this.initConfig(args);
         this.initEventQueue();
         this.beanCreater = beanCreater;
     }
 
-    public DbbusStart(String[] args) {
+    public Application(String[] args) {
         this(args, null);
     }
 
@@ -43,7 +43,7 @@ public class DbbusStart {
         try {
             Command command = Command.parse(args);
             Properties p1 = new Properties();
-            p1.load(DbbusStart.class.getClassLoader().getResourceAsStream(Constants.CONFIG_FILE));
+            p1.load(Application.class.getClassLoader().getResourceAsStream(Constants.CONFIG_FILE));
             if (CommonUtils.isNotBlank(command.getConfigFile())) {
                 File file = new File(command.getConfigFile());
                 if (file.exists()) {
