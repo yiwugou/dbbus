@@ -41,8 +41,9 @@ public class EventConsumerRunnable implements Runnable, Executeable {
         List<DbbusEvent> events = new ArrayList<>();
         this.application.getAfterMergeQueue().drainTo(events);
         for (DbbusEvent event : events) {
+            boolean success = false;
             if (Action.DELETE == event.getAction()) {
-                this.eventConsumer.onDelete(event);
+                success = this.eventConsumer.onDelete(event);
             } else {
                 String tableName = event.getTableName();
                 IdColumns idColumns = this.application.getConfig().getTableConfig().getIdColumns(tableName);
@@ -51,12 +52,17 @@ public class EventConsumerRunnable implements Runnable, Executeable {
                 }
                 Map<String, Object> data = this.processDataMap(idColumns, event);
                 if (Action.INSERT == event.getAction()) {
-                    this.eventConsumer.onInsert(event, data);
+                    success = this.eventConsumer.onInsert(event, data);
                 } else if (Action.UPDATE == event.getAction()) {
-                    this.eventConsumer.onUpdate(event, data);
+                    success = this.eventConsumer.onUpdate(event, data);
                 } else {
                     logger.error("not support event action=" + event.getAction());
                 }
+            }
+            if (success) {
+
+            } else {
+                logger.error("consumer failed! event=" + event);
             }
         }
     }

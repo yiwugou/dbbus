@@ -73,10 +73,9 @@ public class EventPullerTask implements Runnable, Executeable {
             logger.info("dbbus event size=" + events.size() + ", events=" + events);
             Long minTxn = events.get(0).getTxn();
             Long maxTxn = events.get(events.size() - 1).getTxn();
-            logger.info("minTxn=" + minTxn + ",maxTxn=" + maxTxn);
             int result = this.jdbcTemplate.update("update dbbus_event set status=? where txn>=? and txn<=?",
                     Status.READED.ordinal(), minTxn, maxTxn);
-            logger.info("update result=" + result);
+            logger.info("minTxn=" + minTxn + ", maxTxn=" + maxTxn + ", update result=" + result);
             this.application.getBeforeMergeQueue().addAll(events);
             new EventMergeRunnable(this.jdbcTemplate, this.application).execute();
         } else {
