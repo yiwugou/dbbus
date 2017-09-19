@@ -12,13 +12,11 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yiwugou.dbbus.core.BeanCreater;
-import com.yiwugou.dbbus.core.DataContainer;
 import com.yiwugou.dbbus.core.DbbusEvent;
 import com.yiwugou.dbbus.core.TableId;
-import com.yiwugou.dbbus.core.config.Config;
 import com.yiwugou.dbbus.core.enums.Action;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
+import com.yiwugou.dbbus.core.start.Application;
 
 public class EventMergeRunnable implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventMergeRunnable.class);
@@ -26,24 +24,21 @@ public class EventMergeRunnable implements Runnable, Executeable {
     private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
     private JdbcTemplate jdbcTemplate;
 
-    private BeanCreater beanCreater;
+    private Application application;
 
-    private Config config;
-
-    public EventMergeRunnable(JdbcTemplate jdbcTemplate, BeanCreater beanCreater, Config config) {
+    public EventMergeRunnable(JdbcTemplate jdbcTemplate, Application application) {
         this.jdbcTemplate = jdbcTemplate;
-        this.beanCreater = beanCreater;
-        this.config = config;
+        this.application = application;
     }
 
     @Override
     public void run() {
         List<DbbusEvent> events = new ArrayList<>();
-        DataContainer.eventBeforeMergeQueue().drainTo(events);
+        this.application.getBeforeMergeQueue().drainTo(events);
         if (events != null && !events.isEmpty()) {
             List<DbbusEvent> afterMerge = this.mergeEvent(events);
-            DataContainer.eventAfterMergeQueue().addAll(afterMerge);
-            new EventConsumerRunnable(this.jdbcTemplate, this.beanCreater, this.config).execute();
+            this.application.getAfterMergeQueue().addAll(afterMerge);
+            new EventConsumerRunnable(this.jdbcTemplate, this.application).execute();
         }
     }
 

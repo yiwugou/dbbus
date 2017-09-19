@@ -9,14 +9,12 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yiwugou.dbbus.core.BeanCreater;
-import com.yiwugou.dbbus.core.DataContainer;
 import com.yiwugou.dbbus.core.DbbusEvent;
 import com.yiwugou.dbbus.core.EventConsumer;
-import com.yiwugou.dbbus.core.config.Config;
 import com.yiwugou.dbbus.core.config.IdColumns;
 import com.yiwugou.dbbus.core.enums.Action;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
+import com.yiwugou.dbbus.core.start.Application;
 
 public class EventConsumerRunnable implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumerRunnable.class);
@@ -27,27 +25,27 @@ public class EventConsumerRunnable implements Runnable, Executeable {
 
     private EventConsumer eventConsumer;
 
-    private Config config;
+    private Application application;
 
-    public EventConsumerRunnable(JdbcTemplate jdbcTemplate, BeanCreater beanCreater, Config config) {
+    public EventConsumerRunnable(JdbcTemplate jdbcTemplate, Application application) {
         this.jdbcTemplate = jdbcTemplate;
-        this.eventConsumer = beanCreater.getEventConsumer();
+        this.application = application;
+        this.eventConsumer = application.getBeanCreater().getEventConsumer();
         if (this.eventConsumer == null) {
             throw new RuntimeException("eventConsumer must not be null");
         }
-        this.config = config;
     }
 
     @Override
     public void run() {
         List<DbbusEvent> events = new ArrayList<>();
-        DataContainer.eventAfterMergeQueue().drainTo(events);
+        this.application.getAfterMergeQueue().drainTo(events);
         for (DbbusEvent event : events) {
             if (Action.DELETE == event.getAction()) {
                 this.eventConsumer.onDelete(event);
             } else {
                 String tableName = event.getTableName();
-                IdColumns idColumns = this.config.getTableConfig().getIdColumns(tableName);
+                IdColumns idColumns = this.application.getConfig().getTableConfig().getIdColumns(tableName);
                 if (idColumns == null) {
                     idColumns = new IdColumns();
                 }

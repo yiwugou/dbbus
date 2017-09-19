@@ -8,39 +8,35 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yiwugou.dbbus.core.BeanCreater;
-import com.yiwugou.dbbus.core.DataContainer;
 import com.yiwugou.dbbus.core.DbbusEvent;
 import com.yiwugou.dbbus.core.cluster.ClusterLock;
 import com.yiwugou.dbbus.core.cluster.ClusterLockCreater;
-import com.yiwugou.dbbus.core.config.Config;
 import com.yiwugou.dbbus.core.enums.Action;
 import com.yiwugou.dbbus.core.enums.Status;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 import com.yiwugou.dbbus.core.jdbc.RowMapper;
+import com.yiwugou.dbbus.core.start.Application;
 
 public class EventPullerTask implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventPullerTask.class);
 
-    private BeanCreater beanCreater;
-
-    private Config config;
-
     private ClusterLock clusterLock;
 
-    public EventPullerTask(Config config, BeanCreater beanCreater) {
-        this.config = config;
-        this.beanCreater = beanCreater;
+    private Application application;
+
+    public EventPullerTask(Application application) {
+        this.application = application;
         this.initData();
     }
 
     private void initData() {
-        this.jdbcTemplate = new JdbcTemplate(
-                this.beanCreater.getDataSourceCreater().create(this.config.getJdbcConfig()));
-        this.executor = Executors.newScheduledThreadPool(this.config.getEventConfig().getPullerPoolSize());
-        this.clusterLock = ClusterLockCreater.create(this.config.getClusterConfig());
+        this.jdbcTemplate = new JdbcTemplate(this.application.getBeanCreater().getDataSourceCreater()
+                .create(this.application.getConfig().getJdbcConfig()));
+        this.executor = Executors
+                .newScheduledThreadPool(this.application.getConfig().getEventConfig().getPullerPoolSize());
+        this.clusterLock = ClusterLockCreater.create(this.application.getConfig().getClusterConfig());
 
-        Long clearDelay = this.config.getEventConfig().getClearDelay();
+        Long clearDelay = this.application.getConfig().getEventConfig().getClearDelay();
         if (clearDelay != null && clearDelay > 0) {
             new EventClearTask(this.jdbcTemplate, clearDelay).execute();
         }
@@ -72,7 +68,7 @@ public class EventPullerTask implements Runnable, Executeable {
                     de.setStatus(Status.parse(rs.getInt("status")));
                     de.setTs(rs.getLong("ts"));
                     return de;
-                }, Status.UNREAD.ordinal(), this.config.getEventConfig().getMaxRowNum());
+                }, Status.UNREAD.ordinal(), this.application.getConfig().getEventConfig().getMaxRowNum());
         if (events != null && !events.isEmpty()) {
             logger.info("dbbus event size=" + events.size() + ", events=" + events);
             Long minTxn = events.get(0).getTxn();
@@ -81,8 +77,8 @@ public class EventPullerTask implements Runnable, Executeable {
             int result = this.jdbcTemplate.update("update dbbus_event set status=? where txn>=? and txn<=?",
                     Status.READED.ordinal(), minTxn, maxTxn);
             logger.info("update result=" + result);
-            DataContainer.eventBeforeMergeQueue().addAll(events);
-            new EventMergeRunnable(this.jdbcTemplate, this.beanCreater, this.config).execute();
+            this.application.getBeforeMergeQueue().addAll(events);
+            new EventMergeRunnable(this.jdbcTemplate, this.application).execute();
         } else {
             logger.debug("event is empty");
         }
@@ -90,7 +86,7 @@ public class EventPullerTask implements Runnable, Executeable {
 
     @Override
     public void execute() {
-        this.executor.scheduleWithFixedDelay(this, 0, this.config.getEventConfig().getPullerDelay(),
+        this.executor.scheduleWithFixedDelay(this, 0, this.application.getConfig().getEventConfig().getPullerDelay(),
                 TimeUnit.MILLISECONDS);
     }
 
