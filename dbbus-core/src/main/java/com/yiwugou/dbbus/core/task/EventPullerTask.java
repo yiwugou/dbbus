@@ -17,6 +17,14 @@ import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 import com.yiwugou.dbbus.core.jdbc.RowMapper;
 import com.yiwugou.dbbus.core.start.Application;
 
+/**
+ *
+ * EventPullerTask
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:57:57
+ */
 public class EventPullerTask implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventPullerTask.class);
 

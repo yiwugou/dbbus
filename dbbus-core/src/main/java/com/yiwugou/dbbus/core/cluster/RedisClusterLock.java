@@ -6,14 +6,11 @@ import redis.clients.jedis.Jedis;
 
 /**
  *
- * <pre>
- * ZookeeperDistributedLock
- * use Apache Curator
- * </pre>
+ * RedisClusterLock
  *
  * @author zhanxiaoyong@yiwugou.com
  *
- * @since 2017年9月8日 下午2:05:51
+ * @since 2017年9月20日 上午8:49:23
  */
 public class RedisClusterLock implements ClusterLock {
     private Jedis jedis;
@@ -25,7 +22,7 @@ public class RedisClusterLock implements ClusterLock {
     public RedisClusterLock(ClusterConfig clusterConfig) {
         String[] hostPort = clusterConfig.getHostPort().split("\\:");
         this.jedis = new Jedis(hostPort[0], Integer.parseInt(hostPort[1]));
-        this.key = KEY + Integer.toHexString(hashCode());
+        this.key = KEY + Integer.toHexString(this.hashCode());
         this.unLock();
     }
 
@@ -45,13 +42,13 @@ public class RedisClusterLock implements ClusterLock {
 
     @Override
     public boolean tryLock() {
-        long l = jedis.setnx(this.key, VALUE);
+        long l = this.jedis.setnx(this.key, VALUE);
         return l == 1;
     }
 
     @Override
     public void unLock() {
-        jedis.del(key);
+        this.jedis.del(this.key);
     }
 
 }

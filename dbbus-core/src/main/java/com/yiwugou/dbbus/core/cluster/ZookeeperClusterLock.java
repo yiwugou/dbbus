@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.yiwugou.dbbus.core.config.ClusterConfig;
 
 /**
- *
  * <pre>
  * ZookeeperDistributedLock
  * use Apache Curator
@@ -33,16 +32,16 @@ public class ZookeeperClusterLock implements ClusterLock {
 
     public ZookeeperClusterLock(ClusterConfig clusterConfig) {
         this.client = CuratorFrameworkFactory.newClient(clusterConfig.getHostPort(), new RetryNTimes(2, 500));
-        client.start();
-        String path = PATH + Integer.toHexString(hashCode());
-        lock = new InterProcessSemaphoreMutex(client, path);
+        this.client.start();
+        String path = PATH + Integer.toHexString(this.hashCode());
+        this.lock = new InterProcessSemaphoreMutex(this.client, path);
         this.unLock();
     }
 
     @Override
     public void lock() {
         try {
-            lock.acquire();
+            this.lock.acquire();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -51,7 +50,7 @@ public class ZookeeperClusterLock implements ClusterLock {
     @Override
     public boolean tryLock() {
         try {
-            return lock.acquire(1, TimeUnit.MILLISECONDS);
+            return this.lock.acquire(1, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             logger.error("tryLock error", e);
         }
@@ -61,7 +60,7 @@ public class ZookeeperClusterLock implements ClusterLock {
     @Override
     public void unLock() {
         try {
-            lock.release();
+            this.lock.release();
         } catch (Exception e) {
             logger.error("unLock error", e);
         }

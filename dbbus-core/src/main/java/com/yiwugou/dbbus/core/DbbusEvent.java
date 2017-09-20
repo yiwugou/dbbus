@@ -7,6 +7,14 @@ import com.yiwugou.dbbus.core.enums.Status;
 
 import lombok.Data;
 
+/**
+ *
+ * DbbusEvent
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:55:16
+ */
 @Data
 public class DbbusEvent implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -19,7 +27,7 @@ public class DbbusEvent implements Serializable {
      */
     private Action action;
     /**
-     * 0-unread;1-readed;
+     * 0-unread;1-readed;2-error;
      */
     private Status status;
 

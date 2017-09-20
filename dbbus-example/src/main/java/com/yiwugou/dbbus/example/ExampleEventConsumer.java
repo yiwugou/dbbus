@@ -8,6 +8,14 @@ import org.slf4j.LoggerFactory;
 import com.yiwugou.dbbus.core.DbbusEvent;
 import com.yiwugou.dbbus.core.EventConsumer;
 
+/**
+ *
+ * ExampleEventConsumer
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午9:02:42
+ */
 public class ExampleEventConsumer implements EventConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(ExampleEventConsumer.class);

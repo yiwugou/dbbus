@@ -10,6 +10,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ *
+ * JdbcConfig
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:56:34
+ */
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JdbcConfig {

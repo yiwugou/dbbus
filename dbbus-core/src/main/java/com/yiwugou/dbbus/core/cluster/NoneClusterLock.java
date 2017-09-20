@@ -2,14 +2,11 @@ package com.yiwugou.dbbus.core.cluster;
 
 /**
  *
- * <pre>
- * ZookeeperDistributedLock
- * use Apache Curator
- * </pre>
+ * NoneClusterLock
  *
  * @author zhanxiaoyong@yiwugou.com
  *
- * @since 2017年9月8日 下午2:05:51
+ * @since 2017年9月20日 上午8:55:49
  */
 public class NoneClusterLock implements ClusterLock {
 

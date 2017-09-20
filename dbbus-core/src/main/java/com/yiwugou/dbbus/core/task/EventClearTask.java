@@ -10,6 +10,14 @@ import org.slf4j.LoggerFactory;
 import com.yiwugou.dbbus.core.enums.Status;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 
+/**
+ *
+ * EventClearTask
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:57:40
+ */
 public class EventClearTask implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventClearTask.class);
     private ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);

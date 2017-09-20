@@ -15,6 +15,14 @@ import javax.sql.DataSource;
 
 import com.yiwugou.dbbus.core.util.CommonUtils;
 
+/**
+ *
+ * JdbcTemplate
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:57:24
+ */
 public class JdbcTemplate {
     private DataSource dataSource;
 
@@ -27,7 +35,7 @@ public class JdbcTemplate {
         PreparedStatement ps = null;
         int result = 0;
         try {
-            con = dataSource.getConnection();
+            con = this.dataSource.getConnection();
             ps = this.createStatement(con, sql, param);
             result = ps.executeUpdate();
         } catch (SQLException e) {
@@ -39,7 +47,7 @@ public class JdbcTemplate {
     }
 
     public Map<String, Object> queryForMap(String sql, Object... param) {
-        List<Map<String, Object>> list = queryForList(sql, param);
+        List<Map<String, Object>> list = this.queryForList(sql, param);
         if (list != null && list.size() > 0) {
             return list.get(0);
         }

@@ -18,7 +18,11 @@ public enum Status {
     /**
      * 1-readed
      */
-    READED;
+    READED,
+    /**
+     * 2-error
+     */
+    ERROR;
 
     public static Status parse(Integer status) {
         for (Status a : Status.values()) {

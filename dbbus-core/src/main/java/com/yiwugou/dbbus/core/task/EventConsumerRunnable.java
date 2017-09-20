@@ -13,9 +13,18 @@ import com.yiwugou.dbbus.core.DbbusEvent;
 import com.yiwugou.dbbus.core.EventConsumer;
 import com.yiwugou.dbbus.core.config.IdColumns;
 import com.yiwugou.dbbus.core.enums.Action;
+import com.yiwugou.dbbus.core.enums.Status;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 import com.yiwugou.dbbus.core.start.Application;
 
+/**
+ *
+ * EventConsumerRunnable
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:57:47
+ */
 public class EventConsumerRunnable implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumerRunnable.class);
 
@@ -59,9 +68,8 @@ public class EventConsumerRunnable implements Runnable, Executeable {
                     logger.error("not support event action=" + event.getAction());
                 }
             }
-            if (success) {
-
-            } else {
+            if (!success) {
+                this.jdbcTemplate.update("update DBBUS_EVENT set status=? where txn=?", Status.ERROR, event.getTxn());
                 logger.error("consumer failed! event=" + event);
             }
         }

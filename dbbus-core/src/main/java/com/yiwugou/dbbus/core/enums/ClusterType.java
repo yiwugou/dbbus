@@ -1,5 +1,13 @@
 package com.yiwugou.dbbus.core.enums;
 
+/**
+ *
+ * ClusterType
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:57:03
+ */
 public enum ClusterType {
     NONE, ZOOKEEPER, REDIS;
 

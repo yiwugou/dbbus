@@ -2,6 +2,14 @@ package com.yiwugou.dbbus.core.util;
 
 import java.util.Properties;
 
+/**
+ *
+ * CommonUtils
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:58:07
+ */
 public class CommonUtils {
     public static final boolean isBlank(String str) {
         return str == null || "".equals(str.trim());

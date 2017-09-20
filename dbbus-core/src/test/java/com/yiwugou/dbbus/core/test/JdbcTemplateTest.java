@@ -8,6 +8,14 @@ import org.junit.Test;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 
+/**
+ *
+ * JdbcTemplateTest
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:58:19
+ */
 public class JdbcTemplateTest {
     @Test
     public void test1() {

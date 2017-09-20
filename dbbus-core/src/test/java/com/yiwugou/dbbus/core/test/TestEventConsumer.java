@@ -7,6 +7,14 @@ import org.apache.log4j.Logger;
 import com.yiwugou.dbbus.core.DbbusEvent;
 import com.yiwugou.dbbus.core.EventConsumer;
 
+/**
+ *
+ * TestEventConsumer
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:58:23
+ */
 public class TestEventConsumer implements EventConsumer {
 
     private static final Logger logger = Logger.getLogger(TestEventConsumer.class);

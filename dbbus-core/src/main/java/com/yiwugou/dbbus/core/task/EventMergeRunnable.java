@@ -18,6 +18,14 @@ import com.yiwugou.dbbus.core.enums.Action;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 import com.yiwugou.dbbus.core.start.Application;
 
+/**
+ *
+ * EventMergeRunnable
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:57:52
+ */
 public class EventMergeRunnable implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventMergeRunnable.class);
 

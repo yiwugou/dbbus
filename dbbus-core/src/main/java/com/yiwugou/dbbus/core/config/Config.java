@@ -11,6 +11,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ *
+ * Config
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:56:14
+ */
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Config {

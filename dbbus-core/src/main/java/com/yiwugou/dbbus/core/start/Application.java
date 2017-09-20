@@ -21,6 +21,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ *
+ * Application
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:57:35
+ */
 @ToString
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);

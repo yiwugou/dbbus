@@ -5,6 +5,14 @@ import java.util.regex.Pattern;
 
 import lombok.Data;
 
+/**
+ *
+ * IdColumns
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:56:30
+ */
 @Data
 public class IdColumns {
     private String tableName;

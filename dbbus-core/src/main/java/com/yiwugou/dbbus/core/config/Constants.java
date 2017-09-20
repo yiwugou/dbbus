@@ -1,5 +1,13 @@
 package com.yiwugou.dbbus.core.config;
 
+/**
+ *
+ * Constants
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:56:19
+ */
 public class Constants {
     public static final String CONFIG_FILE = "dbbus.properties";
 

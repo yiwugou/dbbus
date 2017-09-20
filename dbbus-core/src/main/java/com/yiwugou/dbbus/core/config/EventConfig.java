@@ -10,6 +10,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ *
+ * EventConfig
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年9月20日 上午8:56:24
+ */
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventConfig {
@@ -64,13 +72,6 @@ public class EventConfig {
             config.setClearDelay(Long.valueOf(clearDelay));
         }
 
-        // String consumerClass =
-        // properties.getProperty(Constants.EVENT_CONSUMER_CLASS);
-        // if (CommonUtils.isNotBlank(consumerClass)) {
-        // config.setConsumerClass(consumerClass);
-        // } else {
-        // throw new RuntimeException("event consumer class must not be null");
-        // }
         return config;
     }
 }
