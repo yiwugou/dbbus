@@ -20,6 +20,7 @@ import com.yiwugou.dbbus.core.util.CommonUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  *
@@ -30,6 +31,7 @@ import lombok.ToString;
  * @since 2017年9月20日 上午8:57:35
  */
 @ToString
+@Accessors(chain = true)
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 

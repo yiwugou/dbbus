@@ -69,7 +69,8 @@ public class EventConsumerRunnable implements Runnable, Executeable {
                 }
             }
             if (!success) {
-                this.jdbcTemplate.update("update DBBUS_EVENT set status=? where txn=?", Status.ERROR, event.getTxn());
+                this.jdbcTemplate.update(this.application.getBeanCreater().getSqlCreater().getOneEventUpdateSql(),
+                        Status.ERROR, event.getTxn());
                 logger.error("consumer failed! event=" + event);
             }
         }

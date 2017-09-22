@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.yiwugou.dbbus.core.enums.Status;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
+import com.yiwugou.dbbus.core.start.Application;
 
 /**
  *
@@ -24,11 +25,11 @@ public class EventClearTask implements Runnable, Executeable {
 
     private JdbcTemplate jdbcTemplate;
 
-    private Long delay;
+    private Application application;
 
-    public EventClearTask(JdbcTemplate jdbcTemplate, Long delay) {
+    public EventClearTask(JdbcTemplate jdbcTemplate, Application application) {
         this.jdbcTemplate = jdbcTemplate;
-        this.delay = delay;
+        this.application = application;
     }
 
     @Override
@@ -39,8 +40,9 @@ public class EventClearTask implements Runnable, Executeable {
 
     @Override
     public void execute() {
-        if (this.delay != null && this.delay > 0) {
-            this.executor.scheduleWithFixedDelay(this, 0, this.delay, TimeUnit.MILLISECONDS);
+        Long clearDelay = this.application.getConfig().getEventConfig().getClearDelay();
+        if (clearDelay != null && clearDelay > 0) {
+            this.executor.scheduleWithFixedDelay(this, 0, clearDelay, TimeUnit.MILLISECONDS);
         }
     }
 }

@@ -44,10 +44,7 @@ public class EventPullerTask implements Runnable, Executeable {
                 .newScheduledThreadPool(this.application.getConfig().getEventConfig().getPullerPoolSize());
         this.clusterLock = ClusterLockCreater.create(this.application.getConfig().getClusterConfig());
 
-        Long clearDelay = this.application.getConfig().getEventConfig().getClearDelay();
-        if (clearDelay != null && clearDelay > 0) {
-            new EventClearTask(this.jdbcTemplate, clearDelay).execute();
-        }
+        new EventClearTask(this.jdbcTemplate, this.application).execute();
     }
 
     private JdbcTemplate jdbcTemplate;
@@ -66,7 +63,7 @@ public class EventPullerTask implements Runnable, Executeable {
 
     private void accessDb() {
         List<DbbusEvent> events = this.jdbcTemplate.queryForList(
-                "select * from (select txn,table_name as tableName,id,action,status,ts from dbbus_event where status=? order by txn asc) where rownum<=?",
+                this.application.getBeanCreater().getSqlCreater().getEventLimitSql(),
                 (RowMapper<DbbusEvent>) (rs, rowNum) -> {
                     DbbusEvent de = new DbbusEvent();
                     de.setTxn(rs.getLong("txn"));
@@ -81,7 +78,7 @@ public class EventPullerTask implements Runnable, Executeable {
             logger.info("dbbus event size=" + events.size() + ", events=" + events);
             Long minTxn = events.get(0).getTxn();
             Long maxTxn = events.get(events.size() - 1).getTxn();
-            int result = this.jdbcTemplate.update("update dbbus_event set status=? where txn>=? and txn<=?",
+            int result = this.jdbcTemplate.update(this.application.getBeanCreater().getSqlCreater().getEventUpdateSql(),
                     Status.READED.ordinal(), minTxn, maxTxn);
             logger.info("minTxn=" + minTxn + ", maxTxn=" + maxTxn + ", update result=" + result);
             this.application.getBeforeMergeQueue().addAll(events);
