@@ -52,26 +52,30 @@ public class EventConsumerRunnable implements Runnable, Executeable {
         this.application.getAfterMergeQueue().drainTo(events);
         for (DbbusEvent event : events) {
             boolean success = false;
-            if (Action.DELETE == event.getAction()) {
-                success = this.eventConsumer.onDelete(event);
-            } else {
-                String tableName = event.getTableName();
-                IdColumns idColumns = this.application.getConfig().getTableConfig().getIdColumns(tableName);
-                if (idColumns == null) {
-                    idColumns = new IdColumns();
-                }
-                Map<String, Object> data = this.processDataMap(idColumns, event);
-                if (Action.INSERT == event.getAction()) {
-                    success = this.eventConsumer.onInsert(event, data);
-                } else if (Action.UPDATE == event.getAction()) {
-                    success = this.eventConsumer.onUpdate(event, data);
+            try {
+                if (Action.DELETE == event.getAction()) {
+                    success = this.eventConsumer.onDelete(event);
                 } else {
-                    logger.error("not support event action=" + event.getAction());
+                    String tableName = event.getTableName();
+                    IdColumns idColumns = this.application.getConfig().getTableConfig().getIdColumns(tableName);
+                    if (idColumns == null) {
+                        idColumns = new IdColumns();
+                    }
+                    Map<String, Object> data = this.processDataMap(idColumns, event);
+                    if (Action.INSERT == event.getAction()) {
+                        success = this.eventConsumer.onInsert(event, data);
+                    } else if (Action.UPDATE == event.getAction()) {
+                        success = this.eventConsumer.onUpdate(event, data);
+                    } else {
+                        logger.error("not support event action=" + event.getAction());
+                    }
                 }
+            } catch (Exception e) {
+                logger.error("consumer error", e);
             }
             if (!success) {
                 this.jdbcTemplate.update(this.application.getBeanCreater().getSqlCreater().getOneEventUpdateSql(),
-                        Status.ERROR, event.getTxn());
+                        Status.ERROR.ordinal(), event.getTxn());
                 logger.error("consumer failed! event=" + event);
             }
         }
