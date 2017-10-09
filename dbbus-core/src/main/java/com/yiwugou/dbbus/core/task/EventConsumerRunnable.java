@@ -86,8 +86,8 @@ public class EventConsumerRunnable implements Runnable, Executeable {
         String tableName = event.getTableName();
         String id = event.getId();
         if (idColumns.getEnable() != null && idColumns.getEnable()) {
-            String sql = "select " + idColumns.getColumns() + " from " + tableName + " where " + idColumns.getId()
-                    + "=?";
+            String sql = this.application.getBeanCreater().getSqlCreater().getSelectSql(tableName,
+                    idColumns.getColumns(), idColumns.getId());
             data = this.jdbcTemplate.queryForMap(sql, id);
         }
         return data;

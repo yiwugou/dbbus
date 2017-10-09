@@ -23,4 +23,9 @@ public abstract class AbstractSqlCreater implements SqlCreater {
     public String getEventDeleteSql() {
         return "delete from DBBUS_EVENT where status=?";
     }
+
+    @Override
+    public String getSelectSql(String tableName, String columns, String id) {
+        return "select " + columns + " from " + tableName + " where " + id + "=?";
+    }
 }

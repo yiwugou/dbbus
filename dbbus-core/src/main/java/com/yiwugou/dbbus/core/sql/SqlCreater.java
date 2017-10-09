@@ -18,4 +18,6 @@ public interface SqlCreater {
 
     String getEventDeleteSql();
 
+    String getSelectSql(String tableName, String columns, String id);
+
 }
