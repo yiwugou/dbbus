@@ -72,7 +72,18 @@ cluster.type=redis
 cluster.hostPort=10.6.104.232:6379
 ```
 
-### start
+# start
+## add customer porperties in dbbus.properties
+example:dubbo properties
+```
+...
+dubbo.application.name=yiwugou-dbbus
+dubbo.registry.address=zookeeper://10.6.104.77:3191
+...
+```
+
+## use application.getProperties() get the properties
+
 ```
 public class DbbusMain {
     public static void main(String[] args) throws Exception {
