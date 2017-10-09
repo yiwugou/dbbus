@@ -1,5 +1,6 @@
 package com.yiwugou.dbbus.core.cluster;
 
+import com.yiwugou.dbbus.core.DbbusException;
 import com.yiwugou.dbbus.core.config.ClusterConfig;
 
 import redis.clients.jedis.Jedis;
@@ -35,7 +36,7 @@ public class RedisClusterLock implements ClusterLock {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                throw new DbbusException(e);
             }
         }
     }

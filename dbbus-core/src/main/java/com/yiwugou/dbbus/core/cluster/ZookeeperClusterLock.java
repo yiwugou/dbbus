@@ -10,6 +10,7 @@ import org.apache.curator.retry.RetryNTimes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.yiwugou.dbbus.core.DbbusException;
 import com.yiwugou.dbbus.core.config.ClusterConfig;
 
 /**
@@ -43,7 +44,7 @@ public class ZookeeperClusterLock implements ClusterLock {
         try {
             this.lock.acquire();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DbbusException(e);
         }
     }
 

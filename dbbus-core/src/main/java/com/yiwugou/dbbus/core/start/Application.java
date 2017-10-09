@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.yiwugou.dbbus.core.BeanCreater;
 import com.yiwugou.dbbus.core.DbbusEvent;
+import com.yiwugou.dbbus.core.DbbusException;
 import com.yiwugou.dbbus.core.config.Command;
 import com.yiwugou.dbbus.core.config.Config;
 import com.yiwugou.dbbus.core.config.Constants;
@@ -81,7 +82,7 @@ public class Application {
 
             this.config = Config.initConfig(this.properties);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DbbusException(e);
         }
     }
 

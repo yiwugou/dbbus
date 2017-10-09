@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.yiwugou.dbbus.core.DbbusException;
 import com.yiwugou.dbbus.core.util.CommonUtils;
 
 /**
@@ -39,7 +40,7 @@ public class JdbcTemplate {
             ps = this.createStatement(con, sql, param);
             result = ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DbbusException(e);
         } finally {
             this.closeAll(con, ps, null);
         }
@@ -68,7 +69,7 @@ public class JdbcTemplate {
                 results.add(rowMapper.mapRow(rs, rowNum++));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DbbusException(e);
         } finally {
             this.closeAll(con, ps, rs);
         }
@@ -102,7 +103,7 @@ public class JdbcTemplate {
                 list.add(map);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DbbusException(e);
         } finally {
             this.closeAll(con, ps, rs);
         }

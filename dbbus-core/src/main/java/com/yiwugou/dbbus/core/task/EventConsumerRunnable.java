@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yiwugou.dbbus.core.DbbusEvent;
+import com.yiwugou.dbbus.core.DbbusException;
 import com.yiwugou.dbbus.core.EventConsumer;
 import com.yiwugou.dbbus.core.config.IdColumns;
 import com.yiwugou.dbbus.core.enums.Action;
@@ -41,7 +42,7 @@ public class EventConsumerRunnable implements Runnable, Executeable {
         this.application = application;
         this.eventConsumer = application.getBeanCreater().getEventConsumer();
         if (this.eventConsumer == null) {
-            throw new RuntimeException("eventConsumer must not be null");
+            throw new DbbusException("eventConsumer must not be null");
         }
     }
 
