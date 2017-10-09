@@ -89,9 +89,10 @@ public class DbbusMain {
     public static void main(String[] args) throws Exception {
         Application application = new Application(args);
         Properties properties = application.getProperties();
-        YiwugouEventConsumer exampleEventConsumer = new YiwugouEventConsumer(
-                properties.getProperty("dubbo.application.name"), properties.getProperty("dubbo.registry.address"));
-        BeanCreater beanCreater = BeanCreater.builder().eventConsumer(exampleEventConsumer).build();
+        String dubboName = properties.getProperty("dubbo.application.name");
+        String dubboAddress = properties.getProperty("dubbo.registry.address");
+        YiwugouEventConsumer eventConsumer = new YiwugouEventConsumer(dubboName, dubboAddress);
+        BeanCreater beanCreater = BeanCreater.builder().eventConsumer(eventConsumer).build();
         application.setBeanCreater(beanCreater);
         application.start();
     }
