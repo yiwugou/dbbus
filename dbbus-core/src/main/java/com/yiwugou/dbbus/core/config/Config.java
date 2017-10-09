@@ -42,7 +42,6 @@ public class Config {
 
     public static Config initConfig(Properties properties) {
         Config config = new Config();
-        config = new Config();
         config.setEventConfig(EventConfig.init(properties));
         config.setJdbcConfig(JdbcConfig.init(properties));
         config.setClusterConfig(ClusterConfig.init(properties));

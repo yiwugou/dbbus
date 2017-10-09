@@ -72,5 +72,20 @@ cluster.type=redis
 cluster.hostPort=10.6.104.232:6379
 ```
 
+### start
+```
+public class DbbusMain {
+    public static void main(String[] args) throws Exception {
+        Application application = new Application(args);
+        Properties properties = application.getProperties();
+        YiwugouEventConsumer exampleEventConsumer = new YiwugouEventConsumer(
+                properties.getProperty("dubbo.application.name"), properties.getProperty("dubbo.registry.address"));
+        BeanCreater beanCreater = BeanCreater.builder().eventConsumer(exampleEventConsumer).build();
+        application.setBeanCreater(beanCreater);
+        application.start();
+    }
+}
+```
+
 
 
