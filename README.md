@@ -90,9 +90,9 @@ event.pullerPoolSize=10      #optional default is 10
 event.pullerDelay=1000       #optional default is 100000
 event.clearDelay=-1          #optional default is -1
 
-# table config
+# table config   select person_name,person_age from t_person where person_id = ?
 table.t_person.enable=true                     #optional default is false
-table.t_person.id=id                           #optional default is id
+table.t_person.id=person_id                    #optional default is id
 table.t_person.columns=person_name,person_age  #optional default is *
 
 # cluser config
