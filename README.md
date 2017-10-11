@@ -107,7 +107,9 @@ table.t_person.columns=person_name,person_age  #optional default is *
 # start
 ## use your customer properties file
 * edit start.sh (or start.bat) add your properties file location. example
-* config_file_option="-config /home/yiwu/config/your.properties"
+```
+config_file_option="-config /home/yiwu/config/your.properties"
+```
 * the default properties file is   ' classpath*:dbbus.properties '
 
 ## add customer porperties in properties file. example
