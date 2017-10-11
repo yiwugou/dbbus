@@ -7,11 +7,15 @@ cd dbbus
 gradle myTar
 ```
 
+***
+
 # Install Maven
 ```
 cd dbbus
 gradle uploadArchives
 ```
+
+***
 
 # Add Triggers Sequence Event-Table in database.
 
@@ -100,6 +104,8 @@ END$
 delimiter ;
 ```
 
+***
+
 # cluster
 ### zookeeper
 dbbus.properties
@@ -114,6 +120,8 @@ dbbus.properties
 cluster.type=redis
 cluster.hostPort=10.6.104.232:6379
 ```
+
+***
 
 # properties file
 ```
@@ -146,6 +154,8 @@ table.t_person.columns=person_name,person_age  #optional default is *
 #cluster.hostPort=127.0.0.1:6379
 
 ```
+
+***
 
 # start
 ## use your customer properties file
