@@ -74,8 +74,8 @@ public class EventConsumerRunnable implements Runnable, Executeable {
                 logger.error("consumer error", e);
             }
             if (!success) {
-                this.jdbcTemplate.update(this.application.getBeanCreater().getSqlCreater().getOneEventUpdateSql(),
-                        Status.ERROR.ordinal(), event.getTxn());
+                this.jdbcTemplate.update(this.application.getBeanCreater().getSqlCreater()
+                        .getOneEventUpdateSql(Status.ERROR, event.getTxn()));
                 logger.error("consumer failed! event=" + event);
             }
         }
@@ -87,8 +87,8 @@ public class EventConsumerRunnable implements Runnable, Executeable {
         String id = event.getId();
         if (idColumns.getEnable() != null && idColumns.getEnable()) {
             String sql = this.application.getBeanCreater().getSqlCreater().getSelectSql(tableName,
-                    idColumns.getColumns(), idColumns.getId());
-            data = this.jdbcTemplate.queryForMap(sql, id);
+                    idColumns.getColumns(), idColumns.getId(), id);
+            data = this.jdbcTemplate.queryForMap(sql);
         }
         return data;
     }

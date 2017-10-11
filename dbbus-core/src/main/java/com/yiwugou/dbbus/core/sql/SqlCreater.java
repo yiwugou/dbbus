@@ -1,5 +1,7 @@
 package com.yiwugou.dbbus.core.sql;
 
+import com.yiwugou.dbbus.core.enums.Status;
+
 /**
  *
  * SqlCreater
@@ -9,15 +11,14 @@ package com.yiwugou.dbbus.core.sql;
  * @since 2017年9月22日 上午9:19:56
  */
 public interface SqlCreater {
+    String getSelectSql(String tableName, String columns, String idName, String idValue);
 
-    String getEventLimitSql();
+    String getEventDeleteSql(Status status);
 
-    String getEventUpdateSql();
+    String getOneEventUpdateSql(Status status, long txn);
 
-    String getOneEventUpdateSql();
+    String getEventUpdateSql(Status status, long txnFrom, long txnTo);
 
-    String getEventDeleteSql();
-
-    String getSelectSql(String tableName, String columns, String id);
+    String getEventLimitSql(Status status, int limit);
 
 }

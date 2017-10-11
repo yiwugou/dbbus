@@ -112,9 +112,11 @@ public class JdbcTemplate {
 
     private PreparedStatement createStatement(Connection con, String sql, Object... param) throws SQLException {
         PreparedStatement ps = con.prepareStatement(sql);
-        int i = 1;
-        for (Object obj : param) {
-            ps.setObject(i++, obj);
+        if (param != null) {
+            int i = 1;
+            for (Object obj : param) {
+                ps.setObject(i++, obj);
+            }
         }
         return ps;
     }

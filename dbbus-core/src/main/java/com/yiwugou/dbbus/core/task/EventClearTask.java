@@ -34,8 +34,8 @@ public class EventClearTask implements Runnable, Executeable {
 
     @Override
     public void run() {
-        int result = this.jdbcTemplate.update(this.application.getBeanCreater().getSqlCreater().getEventDeleteSql(),
-                Status.READED.ordinal());
+        int result = this.jdbcTemplate
+                .update(this.application.getBeanCreater().getSqlCreater().getEventDeleteSql(Status.READED));
         logger.debug("event clear result=" + result);
     }
 

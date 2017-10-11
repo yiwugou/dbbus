@@ -1,5 +1,7 @@
 package com.yiwugou.dbbus.core.sql;
 
+import com.yiwugou.dbbus.core.enums.Status;
+
 /**
  *
  * AbstractSqlCreater
@@ -10,22 +12,22 @@ package com.yiwugou.dbbus.core.sql;
  */
 public abstract class AbstractSqlCreater implements SqlCreater {
     @Override
-    public String getEventUpdateSql() {
-        return "update DBBUS_EVENT set status=? where txn>=? and txn<=?";
+    public String getEventUpdateSql(Status status, long txnFrom, long txnTo) {
+        return "update DBBUS_EVENT set status=" + status.ordinal() + " where txn>=" + txnFrom + " and txn<=" + txnTo;
     }
 
     @Override
-    public String getOneEventUpdateSql() {
-        return "update DBBUS_EVENT set status=? where txn=?";
+    public String getOneEventUpdateSql(Status status, long txn) {
+        return "update DBBUS_EVENT set status=" + status.ordinal() + " where txn=" + txn;
     }
 
     @Override
-    public String getEventDeleteSql() {
-        return "delete from DBBUS_EVENT where status=?";
+    public String getEventDeleteSql(Status status) {
+        return "delete from DBBUS_EVENT where status=" + status.ordinal();
     }
 
     @Override
-    public String getSelectSql(String tableName, String columns, String id) {
-        return "select " + columns + " from " + tableName + " where " + id + "=?";
+    public String getSelectSql(String tableName, String columns, String idName, String idValue) {
+        return "select " + columns + " from " + tableName + " where " + idName + "='" + idValue + "'";
     }
 }
