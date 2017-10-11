@@ -1,5 +1,5 @@
 
-# An oracle data change listener. like [linkin-databus](https://github.com/linkedin/databus/)
+# An database data change listener. like [linkin-databus](https://github.com/linkedin/databus/)
 
 # Build System
 ```
@@ -13,7 +13,7 @@ cd dbbus
 gradle uploadArchives
 ```
 
-# Add Triggers Sequence Event-Table in oracle
+# Add Triggers Sequence Event-Table in database. (oracle)
 
 ```
 -- Create table
@@ -72,10 +72,43 @@ cluster.type=redis
 cluster.hostPort=10.6.104.232:6379
 ```
 
+# properties file
+```
+# jdbc config
+jdbc.driver=oracle.jdbc.driver.OracleDriver
+jdbc.url=jdbc:oracle:thin:@10.6.2.72:1521:orcl
+jdbc.username=dbbus
+jdbc.password=dbbus
+jdbc.maxActive=10            #optional default is 100
+jdbc.minIdle=2               #optional default is 10
+
+# event config
+event.maxRowNum=10000        #optional default is 100
+event.mergeUpdate=true       #optional default is true
+event.queueCapacity=100000   #optional default is 10000
+event.pullerPoolSize=10      #optional default is 10
+event.pullerDelay=1000       #optional default is 100000
+event.clearDelay=-1          #optional default is -1
+
+# table config
+table.t_person.enable=true                     #optional default is false
+table.t_person.id=id                           #optional default is id
+table.t_person.columns=person_name,person_age  #optional default is *
+
+# cluser config
+#cluster.type=zookeeper      #optional default is none
+#cluster.hostPort=127.0.0.1:2181
+#or
+#cluster.type=redis
+#cluster.hostPort=127.0.0.1:6379
+
+```
+
 # start
 ## use your customer properties file
 * edit start.sh (or start.bat) add your properties file location. example
-* config_file_option="-config /home/yiwu/config/dbbus.properties"
+* config_file_option="-config /home/yiwu/config/your.properties"
+* the default properties file is   ' classpath*:dbbus.properties '
 
 ## add customer porperties in properties file. example
 ```
