@@ -24,7 +24,7 @@ fi
 jvm_gc_log=${logs_dir}/gc.log
 
 # JVM ARGUMENTS
-jvm_direct_memory_size=40g
+jvm_direct_memory_size=4g
 jvm_direct_memory="-XX:MaxDirectMemorySize=${jvm_direct_memory_size}"
 jvm_min_heap_size="1024m"
 jvm_min_heap="-Xms${jvm_min_heap_size}"

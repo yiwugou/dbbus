@@ -73,8 +73,11 @@ cluster.hostPort=10.6.104.232:6379
 ```
 
 # start
-## add customer porperties in dbbus.properties
-example:dubbo properties
+## use your customer properties file
+* edit start.sh (or start.bat) add your properties file location. example
+* config_file_option="-config /home/yiwu/config/dbbus.properties"
+
+## add customer porperties in properties file. example
 ```
 ...
 dubbo.application.name=yiwugou-dbbus
@@ -83,7 +86,6 @@ dubbo.registry.address=zookeeper://10.6.104.77:3191
 ```
 
 ## use application.getProperties() get the properties
-
 ```
 public class DbbusMain {
     public static void main(String[] args) throws Exception {
