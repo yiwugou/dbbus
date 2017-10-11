@@ -21,7 +21,7 @@ import com.yiwugou.dbbus.core.start.Application;
  */
 public class EventClearTask implements Runnable, Executeable {
     private static final Logger logger = LoggerFactory.getLogger(EventClearTask.class);
-    private ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
 
     private JdbcTemplate jdbcTemplate;
 

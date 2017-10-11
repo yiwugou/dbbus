@@ -1,3 +1,4 @@
+-- Oracle
 -- Create table
 create table DBBUS_EVENT
 (
@@ -15,12 +16,10 @@ comment on column DBBUS_EVENT.status is '0-unread;1-readed;2-error;';
 -- Create/Recreate primary, unique and foreign key constraints
 alter table DBBUS_EVENT add constraint PK_DBBUS_EVENT primary key (TXN);
 
-
 -- Create sequence
 create sequence SEQ_DBBUS_TXN minvalue 1 maxvalue 999999999999999 start with 1 increment by 1;
 
-
--- Create　Trigger
+-- Create trigger for each table
 CREATE OR REPLACE TRIGGER TRG_T_PERSON
   before insert or update or delete on T_PERSON
   referencing old as old new as new
@@ -34,3 +33,44 @@ begin
     INSERT INTO DBBUS_EVENT(txn, table_name, id, action ,status) VALUES(seq_dbbus_txn.nextval,'t_person',:old.id,2,0);
   end if;
 end;
+
+
+
+
+-- Mysql
+-- Create table
+CREATE TABLE `DBBUS_EVENT`(
+  `txn` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `table_name` VARCHAR(20) NOT NULL,
+  `id` VARCHAR(20) NOT NULL,
+  `action` INT(1) NOT NULL COMMENT '0-insert;1-update;2-delete;',
+  `status` INT(1) NOT NULL DEFAULT 0 COMMENT '0-unread;1-readed;2-error;',
+  `ts` BIGINT(14) NOT NULL ,
+  PRIMARY KEY (`txn`)
+);
+
+-- Create　trigger for each table
+delimiter $
+
+CREATE TRIGGER TRG_T_PERSON_INSERT
+AFTER INSERT ON T_PERSON
+FOR EACH ROW
+BEGIN
+  INSERT INTO DBBUS_EVENT(table_name, id, ACTION, ts) VALUES('t_person',new.id, 0, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s'));
+END$
+
+CREATE TRIGGER TRG_T_PERSON_UPDATE
+AFTER update ON T_PERSON
+FOR EACH ROW
+BEGIN
+  INSERT INTO DBBUS_EVENT(table_name, id, ACTION, ts) VALUES('t_person',old.id, 1, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s'));
+END$
+
+CREATE TRIGGER TRG_T_PERSON_DELETE
+AFTER DELETE ON T_PERSON
+FOR EACH ROW
+BEGIN
+  INSERT INTO DBBUS_EVENT(table_name, id, ACTION, ts) VALUES('t_person',old.id, 2, DATE_FORMAT(NOW(),'%Y%m%d%H%i%s'));
+END$
+
+delimiter ;
