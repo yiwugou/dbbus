@@ -86,10 +86,9 @@ public class EventConsumerRunnable implements Runnable, Executeable {
     private Object processData(IdColumns idColumns, DbbusEvent event, RowMapper rowMapper) {
         Object data = null;
         String tableName = event.getTableName();
-        String id = event.getId();
         if (idColumns.getEnable() != null && idColumns.getEnable()) {
             String sql = this.application.getBeanCreater().getSqlCreater().getSelectSql(tableName,
-                    idColumns.getColumns(), idColumns.getId(), id);
+                    idColumns.getColumns(), idColumns.getId(), event.getId());
             if (rowMapper == null) {
                 data = this.jdbcTemplate.queryForMap(sql);
             } else {

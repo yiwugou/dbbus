@@ -181,8 +181,11 @@ public class DbbusMain {
         Properties properties = application.getProperties();
         String dubboName = properties.getProperty("dubbo.application.name");
         String dubboAddress = properties.getProperty("dubbo.registry.address");
-        YiwugouEventConsumer eventConsumer = new YiwugouEventConsumer(dubboName, dubboAddress);
-        BeanCreater beanCreater = BeanCreater.builder().eventConsumer(eventConsumer).build();
+        OrderEventConsumer orderEventConsumer = new OrderEventConsumer(dubboName, dubboAddress);
+
+        Map<String, EventConsumer> eventConsumerMap = new HashMap<>();
+        eventConsumerMap.put("t_order", orderEventConsumer);
+        BeanCreater beanCreater = BeanCreater.builder().eventConsumerMap(eventConsumerMap).build();
         application.setBeanCreater(beanCreater);
         application.start();
     }
