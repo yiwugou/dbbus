@@ -1,5 +1,6 @@
 package com.yiwugou.dbbus.core.start;
 
+import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 
 import com.yiwugou.dbbus.core.BeanCreater;
@@ -26,4 +27,6 @@ public interface Application {
     BlockingQueue<DbbusEvent> getAfterMergeQueue();
 
     JdbcTemplate getJdbcTemplate();
+
+    Properties getProperties();
 }
