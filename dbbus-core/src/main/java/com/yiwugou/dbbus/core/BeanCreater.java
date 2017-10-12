@@ -1,5 +1,10 @@
 package com.yiwugou.dbbus.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.yiwugou.dbbus.core.consumer.AbstractDefaultEventConsumer;
+import com.yiwugou.dbbus.core.consumer.EventConsumer;
 import com.yiwugou.dbbus.core.jdbc.DataSourceCreater;
 import com.yiwugou.dbbus.core.jdbc.DruidDataSourceCreater;
 import com.yiwugou.dbbus.core.sql.OracleSqlCreater;
@@ -23,8 +28,13 @@ import lombok.ToString;
 public class BeanCreater {
     @Getter
     private DataSourceCreater dataSourceCreater;
+    /**
+     * table --> eventConsumer
+     */
     @Getter
-    private EventConsumer eventConsumer;
+    private Map<String, EventConsumer> eventConsumerMap;
+    @Getter
+    private AbstractDefaultEventConsumer defaultEventConsumer;
     @Getter
     private SqlCreater sqlCreater;
 
@@ -34,7 +44,8 @@ public class BeanCreater {
 
     public static class BeanCreaterBuilder {
         private DataSourceCreater dataSourceCreater = new DruidDataSourceCreater();
-        private EventConsumer eventConsumer;
+        private Map<String, EventConsumer> eventConsumerMap = new HashMap<>();
+        private AbstractDefaultEventConsumer defaultEventConsumer;
         private SqlCreater sqlCreater = new OracleSqlCreater();
 
         public BeanCreaterBuilder dataSourceCreater(DataSourceCreater dataSourceCreater) {
@@ -42,8 +53,13 @@ public class BeanCreater {
             return this;
         }
 
-        public BeanCreaterBuilder eventConsumer(EventConsumer eventConsumer) {
-            this.eventConsumer = eventConsumer;
+        public BeanCreaterBuilder defaultEventConsumer(AbstractDefaultEventConsumer defaultEventConsumer) {
+            this.defaultEventConsumer = defaultEventConsumer;
+            return this;
+        }
+
+        public BeanCreaterBuilder eventConsumerMap(Map<String, EventConsumer> eventConsumerMap) {
+            this.eventConsumerMap = eventConsumerMap;
             return this;
         }
 
@@ -53,7 +69,8 @@ public class BeanCreater {
         }
 
         public BeanCreater build() {
-            return new BeanCreater(this.dataSourceCreater, this.eventConsumer, this.sqlCreater);
+            return new BeanCreater(this.dataSourceCreater, this.eventConsumerMap, this.defaultEventConsumer,
+                    this.sqlCreater);
         }
     }
 }

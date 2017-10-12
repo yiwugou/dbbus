@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.yiwugou.dbbus.core.DbbusEvent;
-import com.yiwugou.dbbus.core.EventConsumer;
+import com.yiwugou.dbbus.core.consumer.AbstractDefaultEventConsumer;
 
 /**
  *
@@ -15,9 +15,9 @@ import com.yiwugou.dbbus.core.EventConsumer;
  *
  * @since 2017年9月20日 上午8:58:23
  */
-public class TestEventConsumer implements EventConsumer {
+public class DefaultEventConsumer extends AbstractDefaultEventConsumer {
 
-    private static final Logger logger = Logger.getLogger(TestEventConsumer.class);
+    private static final Logger logger = Logger.getLogger(DefaultEventConsumer.class);
 
     @Override
     public boolean onDelete(DbbusEvent event) {

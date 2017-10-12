@@ -2,7 +2,6 @@ package com.yiwugou.dbbus.core.task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -10,12 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yiwugou.dbbus.core.DbbusEvent;
-import com.yiwugou.dbbus.core.DbbusException;
-import com.yiwugou.dbbus.core.EventConsumer;
 import com.yiwugou.dbbus.core.config.IdColumns;
+import com.yiwugou.dbbus.core.consumer.EventConsumer;
 import com.yiwugou.dbbus.core.enums.Action;
 import com.yiwugou.dbbus.core.enums.Status;
 import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
+import com.yiwugou.dbbus.core.jdbc.RowMapper;
 import com.yiwugou.dbbus.core.start.Application;
 
 /**
@@ -33,17 +32,11 @@ public class EventConsumerRunnable implements Runnable, Executeable {
 
     private JdbcTemplate jdbcTemplate;
 
-    private EventConsumer eventConsumer;
-
     private Application application;
 
     public EventConsumerRunnable(JdbcTemplate jdbcTemplate, Application application) {
         this.jdbcTemplate = jdbcTemplate;
         this.application = application;
-        this.eventConsumer = application.getBeanCreater().getEventConsumer();
-        if (this.eventConsumer == null) {
-            throw new DbbusException("eventConsumer must not be null");
-        }
     }
 
     @Override
@@ -52,22 +45,31 @@ public class EventConsumerRunnable implements Runnable, Executeable {
         this.application.getAfterMergeQueue().drainTo(events);
         for (DbbusEvent event : events) {
             boolean success = false;
+            EventConsumer eventConsumer = this.application.getBeanCreater().getEventConsumerMap()
+                    .get(event.getTableName());
+            if (eventConsumer == null) {
+                eventConsumer = this.application.getBeanCreater().getDefaultEventConsumer();
+                if (eventConsumer == null) {
+                    logger.error("the table {} eventConsumer and defaultEventConsumer is null", event.getTableName());
+                    continue;
+                }
+            }
             try {
                 if (Action.DELETE == event.getAction()) {
-                    success = this.eventConsumer.onDelete(event);
+                    success = eventConsumer.onDelete(event);
                 } else {
                     String tableName = event.getTableName();
                     IdColumns idColumns = this.application.getConfig().getTableConfig().getIdColumns(tableName);
                     if (idColumns == null) {
                         idColumns = new IdColumns();
                     }
-                    Map<String, Object> data = this.processDataMap(idColumns, event);
+                    Object data = this.processData(idColumns, event, eventConsumer.getRowMapper());
                     if (Action.INSERT == event.getAction()) {
-                        success = this.eventConsumer.onInsert(event, data);
+                        success = eventConsumer.onInsert(event, data);
                     } else if (Action.UPDATE == event.getAction()) {
-                        success = this.eventConsumer.onUpdate(event, data);
+                        success = eventConsumer.onUpdate(event, data);
                     } else {
-                        logger.error("not support event action=" + event.getAction());
+                        logger.error("not support event action={}", event.getAction());
                     }
                 }
             } catch (Exception e) {
@@ -81,14 +83,18 @@ public class EventConsumerRunnable implements Runnable, Executeable {
         }
     }
 
-    private Map<String, Object> processDataMap(IdColumns idColumns, DbbusEvent event) {
-        Map<String, Object> data = null;
+    private Object processData(IdColumns idColumns, DbbusEvent event, RowMapper rowMapper) {
+        Object data = null;
         String tableName = event.getTableName();
         String id = event.getId();
         if (idColumns.getEnable() != null && idColumns.getEnable()) {
             String sql = this.application.getBeanCreater().getSqlCreater().getSelectSql(tableName,
                     idColumns.getColumns(), idColumns.getId(), id);
-            data = this.jdbcTemplate.queryForMap(sql);
+            if (rowMapper == null) {
+                data = this.jdbcTemplate.queryForMap(sql);
+            } else {
+                data = this.jdbcTemplate.queryForObject(sql, rowMapper);
+            }
         }
         return data;
     }

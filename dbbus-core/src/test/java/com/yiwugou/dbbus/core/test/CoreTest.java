@@ -1,6 +1,10 @@
 package com.yiwugou.dbbus.core.test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.yiwugou.dbbus.core.BeanCreater;
+import com.yiwugou.dbbus.core.consumer.EventConsumer;
 import com.yiwugou.dbbus.core.start.Application;
 
 /**
@@ -14,6 +18,9 @@ import com.yiwugou.dbbus.core.start.Application;
 public class CoreTest {
 
     public static void main(String[] args) throws Exception {
-        new Application(args, BeanCreater.builder().eventConsumer(new TestEventConsumer()).build()).start();
+        Map<String, EventConsumer> eventConsumerMap = new HashMap<>();
+        eventConsumerMap.put("t_person", new PersonEventConsumer());
+        new Application(args, BeanCreater.builder().defaultEventConsumer(new DefaultEventConsumer())
+                .eventConsumerMap(eventConsumerMap).build()).start();
     }
 }
