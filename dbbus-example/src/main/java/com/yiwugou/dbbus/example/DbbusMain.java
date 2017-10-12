@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.yiwugou.dbbus.core.BeanCreater;
 import com.yiwugou.dbbus.core.consumer.EventConsumer;
-import com.yiwugou.dbbus.core.start.Application;
+import com.yiwugou.dbbus.core.start.ArgApplication;
 
 /**
  *
@@ -19,6 +19,6 @@ public class DbbusMain {
     public static void main(String[] args) throws Exception {
         Map<String, EventConsumer> eventConsumerMap = new HashMap<>();
         eventConsumerMap.put("t_person", new ExampleEventConsumer());
-        new Application(args, BeanCreater.builder().eventConsumerMap(eventConsumerMap).build()).start();
+        new ArgApplication(args, BeanCreater.builder().eventConsumerMap(eventConsumerMap).build()).start();
     }
 }

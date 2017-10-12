@@ -17,6 +17,8 @@ import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 import com.yiwugou.dbbus.core.jdbc.RowMapper;
 import com.yiwugou.dbbus.core.start.Application;
 
+import lombok.Getter;
+
 /**
  *
  * EventPullerTask
@@ -47,6 +49,7 @@ public class EventPullerTask implements Runnable, Executeable {
         new EventClearTask(this.jdbcTemplate, this.application).execute();
     }
 
+    @Getter
     private JdbcTemplate jdbcTemplate;
     private ScheduledExecutorService executor;
 
