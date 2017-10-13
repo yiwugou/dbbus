@@ -134,12 +134,12 @@ jdbc.maxActive=10            #optional default is 100
 jdbc.minIdle=2               #optional default is 10
 
 # event config
-event.maxRowNum=10000        #optional default is 100
+event.maxRowNum=1000         #optional default is 100, not bigger than 1000
 event.mergeUpdate=true       #optional default is true
-event.queueCapacity=100000   #optional default is 10000
+event.queueCapacity=100000   #optional default is 10000, max is 100000
 event.pullerPoolSize=10      #optional default is 10
-event.pullerDelay=1000       #optional default is 100000
-event.clearDelay=-1          #optional default is -1
+event.pullerDelay=1000       #optional default is 1000, unit is milliseconds
+event.clearDelay=-1          #optional default is -1, unit is days
 
 # table config   select person_name,person_age from t_person where person_id = ?
 table.t_person.enable=true                     #optional default is false

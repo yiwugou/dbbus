@@ -43,7 +43,7 @@ public class EventClearTask implements Runnable, Executeable {
     public void execute() {
         Long clearDelay = this.application.getConfig().getEventConfig().getClearDelay();
         if (clearDelay != null && clearDelay > 0) {
-            this.executor.scheduleWithFixedDelay(this, 0, clearDelay, TimeUnit.MILLISECONDS);
+            this.executor.scheduleWithFixedDelay(this, 0, clearDelay, TimeUnit.DAYS);
         }
     }
 }
