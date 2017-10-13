@@ -20,6 +20,8 @@ import com.yiwugou.dbbus.core.jdbc.JdbcTemplate;
 public interface Application {
     BeanCreater getBeanCreater();
 
+    Application setBeanCreater(BeanCreater beanCreater);
+
     Config getConfig();
 
     BlockingQueue<DbbusEvent> getBeforeMergeQueue();
@@ -29,4 +31,7 @@ public interface Application {
     JdbcTemplate getJdbcTemplate();
 
     Properties getProperties();
+
+    void start();
+
 }

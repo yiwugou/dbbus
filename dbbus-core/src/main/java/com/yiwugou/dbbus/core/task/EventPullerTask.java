@@ -45,8 +45,6 @@ public class EventPullerTask implements Runnable, Executeable {
         this.executor = Executors
                 .newScheduledThreadPool(this.application.getConfig().getEventConfig().getPullerPoolSize());
         this.clusterLock = ClusterLockCreater.create(this.application.getConfig().getClusterConfig());
-
-        new EventClearTask(this.jdbcTemplate, this.application).execute();
     }
 
     @Getter
@@ -96,6 +94,7 @@ public class EventPullerTask implements Runnable, Executeable {
     public void execute() {
         this.executor.scheduleWithFixedDelay(this, 0, this.application.getConfig().getEventConfig().getPullerDelay(),
                 TimeUnit.MILLISECONDS);
+        new EventClearTask(this.jdbcTemplate, this.application).execute();
     }
 
 }

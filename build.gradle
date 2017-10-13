@@ -55,10 +55,10 @@ configure(subprojects) {subproject ->
 def mavenRepositoryUrl(subproject){
     if (subproject.version.contains("SNAPSHOT")) {
         println 'SNAPSHOTS BUILD'
-        return "http://10.6.62.222:8081/nexus/content/repositories/snapshots/"
+        return "http://maven.local:8081/nexus/content/repositories/snapshots/"
     } else {
         println 'RELEASE BUILD'
-        return  "http://10.6.62.222:8081/nexus/content/repositories/releases/"
+        return  "http://maven.local:8081/nexus/content/repositories/releases/"
     }
 }
 

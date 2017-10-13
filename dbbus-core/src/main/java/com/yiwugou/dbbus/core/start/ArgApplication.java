@@ -21,14 +21,16 @@ import com.yiwugou.dbbus.core.util.CommonUtils;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Accessors(chain = true)
 public class ArgApplication implements Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public ArgApplication(String[] args, BeanCreater beanCreater) {
+        this.beanCreater = beanCreater;
         this.initConfig(args);
         this.initEventQueue();
-        this.beanCreater = beanCreater;
     }
 
     public ArgApplication(String[] args) {
@@ -89,6 +91,7 @@ public class ArgApplication implements Application {
         this.eventPullerTask = new EventPullerTask(this);
     }
 
+    @Override
     public synchronized void start() {
         if (!this.started) {
             this.initPullerTask();
