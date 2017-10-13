@@ -14,7 +14,7 @@ public class OracleSqlCreater extends AbstractSqlCreater {
     @Override
     public String getEventLimitSql(Status status, int limit) {
         return "select txn, table_name as tableName, id, action, status, ts from DBBUS_EVENT where status="
-                + status.ordinal() + " and rownum<=" + limit + " order by txn desc";
+                + status.ordinal() + " and rownum<=" + limit + " order by txn asc";
     }
 
 }
