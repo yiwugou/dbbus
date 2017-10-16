@@ -23,6 +23,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+/**
+ *
+ * ArgApplication
+ *
+ * @author zhanxiaoyong@yiwugou.com
+ *
+ * @since 2017年10月16日 下午4:25:52
+ */
 @Accessors(chain = true)
 public class ArgApplication implements Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
