@@ -15,6 +15,7 @@ comment on column DBBUS_EVENT.action is '0-insert;1-update;2-delete;';
 comment on column DBBUS_EVENT.status is '0-unread;1-readed;2-error;';
 -- Create/Recreate primary, unique and foreign key constraints
 alter table DBBUS_EVENT add constraint PK_DBBUS_EVENT primary key (TXN);
+create index idx_dbbus_event_status on DBBUS_EVENT (status);
 
 -- Create sequence
 create sequence SEQ_DBBUS_TXN minvalue 1 maxvalue 999999999999999 start with 1 increment by 1;
