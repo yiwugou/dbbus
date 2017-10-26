@@ -5,7 +5,7 @@ CREATE TABLE `DBBUS_EVENT`(
   `table_name` VARCHAR(20) NOT NULL,
   `id` VARCHAR(20) NOT NULL,
   `action` INT(1) NOT NULL COMMENT '0-insert;1-update;2-delete;',
-  `status` INT(1) NOT NULL DEFAULT 0 COMMENT '0-unread;1-readed;2-error;',
+  `status` INT(1) NOT NULL DEFAULT 0 COMMENT '0-unread;1-readed;2-error;3-no consumer;',
   `ts` BIGINT(14) NOT NULL ,
   PRIMARY KEY (`txn`)
 );

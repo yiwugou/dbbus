@@ -12,7 +12,7 @@ create table DBBUS_EVENT
 
 -- Add comments to the columns
 comment on column DBBUS_EVENT.action is '0-insert;1-update;2-delete;';
-comment on column DBBUS_EVENT.status is '0-unread;1-readed;2-error;';
+comment on column DBBUS_EVENT.status is '0-unread;1-readed;2-error;3-no consumer;';
 -- Create/Recreate primary, unique and foreign key constraints
 alter table DBBUS_EVENT add constraint PK_DBBUS_EVENT primary key (TXN);
 create index idx_dbbus_event_status on DBBUS_EVENT (status);

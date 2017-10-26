@@ -22,7 +22,11 @@ public enum Status {
     /**
      * 2-error
      */
-    ERROR;
+    ERROR,
+    /**
+     * 3-no consumer
+     */
+    NO_CONSUMER;
 
     public static Status parse(Integer status) {
         for (Status a : Status.values()) {

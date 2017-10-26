@@ -51,6 +51,8 @@ public class EventConsumerRunnable implements Runnable, Executeable {
                 eventConsumer = this.application.getBeanCreater().getDefaultEventConsumer();
                 if (eventConsumer == null) {
                     logger.error("the table {} eventConsumer and defaultEventConsumer is null", event.getTableName());
+                    this.jdbcTemplate.update(this.application.getBeanCreater().getSqlCreater()
+                            .getOneEventUpdateSql(Status.NO_CONSUMER, event.getTxn()));
                     continue;
                 }
             }
