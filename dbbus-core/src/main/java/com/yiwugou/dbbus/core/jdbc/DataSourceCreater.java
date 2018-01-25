@@ -13,5 +13,5 @@ import com.yiwugou.dbbus.core.config.JdbcConfig;
  * @since 2017年9月20日 上午8:57:12
  */
 public interface DataSourceCreater {
-    public DataSource create(JdbcConfig config);
+    DataSource create(JdbcConfig config);
 }
